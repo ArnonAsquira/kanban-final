@@ -1,13 +1,12 @@
-
- localStorage.setItem('tasks', JSON.stringify({
-    "todo": [],
-    "in-progress": [],
-    "done": []
-      })
-    ); 
-
-
-    ///localStorage.clear();
+ if(!localStorage.tasks){
+    localStorage.setItem('tasks', JSON.stringify({
+        "todo": [],
+        "in-progress": [],
+        "done": []
+          })
+        );
+ }
+ 
 
 
     console.log(JSON.parse(localStorage.tasks).todo);
@@ -19,9 +18,25 @@ document.body.addEventListener('dblclick',gainFocus);
 document.body.addEventListener('focusout', saveValueBlur);
 //local storage save function
 function localStorageSave(){
-    localStorageObjectForUpdate.todo[0] = toDoTasksUl.outerHTML;
-    localStorageObjectForUpdate['in-progress'][0] = inProgressTasksUl.outerHTML;
-    localStorageObjectForUpdate.done[0] = doneTasksUl.outerHTML;
+
+    let todoTasksArray = Array.from(toDoTasksUl.children);
+    let inProgressTaskArray = Array.from(inProgressTasksUl.children);
+    let doneTaskArray = Array.from(doneTasksUl.children);
+
+    todoTasksArray = todoTasksArray.map((task) => {
+        return (task.textContent)
+    });
+    inProgressTaskArray = inProgressTaskArray.map((task) => {
+        return (task.textContent)
+    });
+    doneTaskArray = doneTaskArray.map((task) => {
+        return (task.textContent)
+    });
+
+
+    localStorageObjectForUpdate.todo = todoTasksArray.reverse();
+    localStorageObjectForUpdate['in-progress'] = inProgressTaskArray.reverse();
+    localStorageObjectForUpdate.done = doneTaskArray.reverse();
     console.log(localStorageObjectForUpdate);
     localStorage.setItem('tasks',JSON.stringify(localStorageObjectForUpdate));
 }
@@ -35,17 +50,45 @@ let saveButton = document.getElementById('save-button');
 let loadButton = document.getElementById('load-button');
  
  //localstorage loading function
- if(localStorageObjectForUpdate.todo.length[0] != null || localStorageObjectForUpdate['in-progress'][0] != null || localStorageObjectForUpdate.done[0] != null){
-    let toDoSection = document.getElementById('to-do-container');
+ 
+ if(localStorageObjectForUpdate.todo.length > 0 || localStorageObjectForUpdate['in-progress'].length > 0 || localStorageObjectForUpdate.done.length > 0){
+    let toDoContainer = document.querySelector('#to-do-container');
     let inProgressContainer = document.getElementById('in-progress-container');
-    let donContainer = document.getElementById('done-container');
-    toDoSection.innerHTML = localStorageObjectForUpdate.todo[0];
-    inProgressContainer.innerHTML = localStorageObjectForUpdate['in-progress'][0];
-    donContainer.innerHTML = localStorageObjectForUpdate.done[0];
+    let doneContainer = document.getElementById('done-container');
 
-    var toDoTasksUl = toDoSection.firstChild;
-    var inProgressTasksUl = inProgressContainer.firstChild;
-    var doneTasksUl = donContainer.firstChild;
+    var toDoTasksUl = createElement('ul', children = [], classes = ['to-do-tasks'], attributes = {});
+    var inProgressTasksUl = createElement('ul', children = [], classes = ['in-progress-tasks'], attributes = {});
+    var doneTasksUl = createElement('ul', children = [], classes = ['done-tasks'], attributes = {});
+
+    console.log(toDoTasksUl);
+
+    toDoContainer.appendChild(toDoTasksUl)
+    inProgressContainer.appendChild(inProgressTasksUl); 
+    doneContainer.appendChild(doneTasksUl);
+   
+    console.log(toDoContainer);
+
+   for(let task of JSON.parse(localStorage.tasks).todo){
+       console.log(toDoContainer);
+    let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+    newTask.addEventListener('dragstart', dragItem);
+    newTask.addEventListener('dragend', endDrag);
+    toDoContainer.firstChild.appendChild(newTask);
+   }
+   for(let task of JSON.parse(localStorage.tasks)['in-progress']){
+    console.log(task + 'inprogress task');
+    let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+    newTask.addEventListener('dragstart', dragItem);
+    newTask.addEventListener('dragend', endDrag);
+    inProgressContainer.firstChild.appendChild(newTask);
+   }
+   for(let task of JSON.parse(localStorage.tasks).done){
+    console.log(task + 'done task');
+    let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+    newTask.addEventListener('dragstart', dragItem);
+    newTask.addEventListener('dragend', endDrag);
+    doneContainer.firstChild.appendChild(newTask);
+   }
 
  }else{
     var toDoTasksUl = createElement('ul', children = [], classes = ['to-do-tasks'], attributes = {})
@@ -55,7 +98,7 @@ let loadButton = document.getElementById('load-button');
     document.getElementById('to-do-container').appendChild(toDoTasksUl);
     document.getElementById('in-progress-container').appendChild(inProgressTasksUl);
     document.getElementById('done-container').appendChild(doneTasksUl);
- }
+}
 //load local storage
 
 console.log
@@ -70,8 +113,7 @@ function addTask(e){
        if(inputText === ''){
             alert("You haven't entered any text");
        }else{
-            //let newTaskInnerItem = createElement('input', children = [], classes = ['taskItemInner'], attributes = {value: `${target.previousElementSibling.value}`, 'disabled' :''});
-            let newTask = createElement('li',children = [/*newTaskInnerItem */ `${target.previousElementSibling.value}`], classes = ['task'], attributes = {'draggable': 'true'});
+            let newTask = createElement('li',children = [`${target.previousElementSibling.value}`], classes = ['task'], attributes = {'draggable': 'true'});
             console.log(target.nextElementSibling.firstChild);
             target.nextElementSibling.firstChild.insertBefore(newTask, target.nextElementSibling.firstChild.firstChild);
 
@@ -118,7 +160,7 @@ taskDiv.addEventListener('click', addTask)
   
      
       function innerKeyReplace(e){
-            if(e.altKey ){
+            if(e.altKey){
                 if(e.key == 1){
                     toDoTasksUl.insertBefore(target, toDoTasksUl.firstChild);
                 }else if(e.key == 2){
@@ -210,13 +252,30 @@ searchBar.addEventListener('blur', () => {
 searchBar.addEventListener('keyup', searchTask);
 //API functions
 async function saveApi(){
+
+
+    let todoTasksArray = Array.from(toDoTasksUl.children);
+    let inProgressTaskArray = Array.from(inProgressTasksUl.children);
+    let doneTaskArray = Array.from(doneTasksUl.children);
+
+    todoTasksArray = todoTasksArray.map((task) => {
+        return (task.textContent)
+    });
+    inProgressTaskArray = inProgressTaskArray.map((task) => {
+        return (task.textContent)
+    });
+    doneTaskArray = doneTaskArray.map((task) => {
+        return (task.textContent)
+    });
+
+
     console.log('save button');
      await fetch('https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15',{
         method: 'PUT',
         headers :{
             Accept: "application/json", "Content-Type": "application/json",
         },
-        body: JSON.stringify({'tasks':{'todo':[toDoTasksUl.outerHTML], 'in-progress': [inProgressTasksUl.outerHTML], 'done' : [doneTasksUl.outerHTML]} 
+        body: JSON.stringify({'tasks':{'todo':[...todoTasksArray.reverse()], 'in-progress': [...inProgressTaskArray.reverse()], 'done' : [...doneTaskArray.reverse()]} 
         }) 
   })
 }
@@ -304,3 +363,7 @@ function elementAfterDragging(container, y){
         console.log(offset);
     }, {offset: Number.NEGATIVE_INFINITY}).element
 }
+
+
+
+
