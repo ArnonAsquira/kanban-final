@@ -16,14 +16,28 @@
 
 document.body.addEventListener('mouseover' ,addHoverReplace);
 document.body.addEventListener('dblclick',gainFocus);
-document.body.addEventListener('focusout', saveValueBlur);
+//document.body.addEventListener('focusout', saveValueBlur);
+
+
 //local storage save function
 function localStorageSave(){
-    localStorageObjectForUpdate.todo[0] = toDoTasksUl.outerHTML;
-    localStorageObjectForUpdate['in-progress'][0] = inProgressTasksUl.outerHTML;
-    localStorageObjectForUpdate.done[0] = doneTasksUl.outerHTML;
+    //localStorageObjectForUpdate.todo =
+    for(let child of Array.from(document.querySelector('.to-do-tasks').children)){
+        localStorageObjectForUpdate.todo.push(child.textContent);
+    }
+    for(let child of Array.from(document.querySelector('.in-progress-tasks').children)){
+        localStorageObjectForUpdate['in-progress'].push(child.textContent);
+    }
+    for(let child of Array.from(document.querySelector('.done-tasks').children)){
+        localStorageObjectForUpdate.done.push(child.textContent);
+    }
+    console.log(localStorageObjectForUpdate);
+    /*
+    localStorageObjectForUpdate['in-progress'] =  Array.from(inProgressTasksUl.children)
+    localStorageObjectForUpdate.done =  Array.from(doneTasksUl.children)
     console.log(localStorageObjectForUpdate);
     localStorage.setItem('tasks',JSON.stringify(localStorageObjectForUpdate));
+    */
 }
 
 //setting variables for the document elements
@@ -35,6 +49,7 @@ let saveButton = document.getElementById('save-button');
 let loadButton = document.getElementById('load-button');
  
  //localstorage loading function
+ /*
  if(localStorageObjectForUpdate.todo.length[0] != null || localStorageObjectForUpdate['in-progress'][0] != null || localStorageObjectForUpdate.done[0] != null){
     let toDoSection = document.getElementById('to-do-container');
     let inProgressContainer = document.getElementById('in-progress-container');
@@ -47,7 +62,8 @@ let loadButton = document.getElementById('load-button');
     var inProgressTasksUl = inProgressContainer.firstChild;
     var doneTasksUl = donContainer.firstChild;
 
- }else{
+ } */
+ //else{
     var toDoTasksUl = createElement('ul', children = [], classes = ['to-do-tasks'], attributes = {})
     var inProgressTasksUl = createElement('ul', children = [], classes = ['in-progress-tasks'], attributes = {})
     var doneTasksUl = createElement('ul', children = [], classes = ['done-tasks'], attributes = {})
@@ -55,7 +71,7 @@ let loadButton = document.getElementById('load-button');
     document.getElementById('to-do-container').appendChild(toDoTasksUl);
     document.getElementById('in-progress-container').appendChild(inProgressTasksUl);
     document.getElementById('done-container').appendChild(doneTasksUl);
- }
+// }
 //load local storage
 
 console.log
@@ -70,13 +86,20 @@ function addTask(e){
        if(inputText === ''){
             alert("You haven't entered any text");
        }else{
-            //let newTaskInnerItem = createElement('input', children = [], classes = ['taskItemInner'], attributes = {value: `${target.previousElementSibling.value}`, 'disabled' :''});
-            let newTask = createElement('li',children = [/*newTaskInnerItem */ `${target.previousElementSibling.value}`], classes = ['task'], attributes = {'draggable': 'true'});
-            console.log(target.nextElementSibling.firstChild);
+            let newTask = createElement('li',children = [`${target.previousElementSibling.value}`], classes = ['task'], attributes = {'draggable': 'true'});
+            //console.log(target.nextElementSibling.firstChild);
             target.nextElementSibling.firstChild.insertBefore(newTask, target.nextElementSibling.firstChild.firstChild);
 
               //local storage insertion
-              localStorageSave();
+              if(target.nextElementSibling.firstChild.className === 'to-do-tasks'){
+                localStorageObjectForUpdate.todo.push(newTask.textContent);
+              }if(target.nextElementSibling.firstChild.className === 'in-progress-tasks'){
+                localStorageObjectForUpdate['in-progress'].push(newTask.textContent);
+              }if(target.nextElementSibling.firstChild.className === 'done-tasks'){
+                localStorageObjectForUpdate.done.push(newTask.textContent);
+              }
+              console.log(localStorageObjectForUpdate);
+              localStorage.setItem('tasks',JSON.stringify(localStorageObjectForUpdate));
               // end of local storage insertion
 
               newTask.addEventListener('dragstart', dragItem);
@@ -90,11 +113,20 @@ function addTask(e){
 taskDiv.addEventListener('click', addTask)
 
 // double click functionality
-
+let indexOfDoubleClicked = 0;
 //gaining focus function
  function gainFocus(e){
      let target = e.target;
      if(target.tagName === 'LI'){
+        if(target.parentElement.className === 'to-do-tasks'){
+            indexOfDoubleClicked = localStorageObjectForUpdate.todo.indexOf(target.textContent);
+            console.log(indexOfDoubleClicked + 'indexOfDoubleClicked')
+        }if(target.parentElement.className === 'in-progress-tasks'){
+            indexOfDoubleClicked = localStorageObjectForUpdate['in-progress'].indexOf(target.textContent);
+        }if(target.parentElement.className === 'done-tasks'){
+            indexOfDoubleClicked = localStorageObjectForUpdate.done.indexOf(target.textContent);
+        }
+         target.addEventListener('blur', saveValueBlur);
          target.setAttribute('contenteditable' , 'true');
          target.style.backgroundColor = 'rgba(50,50,200,0.5)';
      }
@@ -102,13 +134,21 @@ taskDiv.addEventListener('click', addTask)
 
  // getting out of focus after blur
  function saveValueBlur(e){
-    let target = e.target;
-     if(target.tagName != 'LI'){
-        return;
-     }
+     let target = e.target;
      target.setAttribute('contenteditable', 'false');
      target.style.backgroundColor = 'rgba(0,0,0,0)';
-    localStorageSave();
+     //local storage save
+     if(target.parentElement.className === 'to-do-tasks'){
+                console.log('replacer');
+                localStorageObjectForUpdate.todo.splice(indexOfDoubleClicked, 1 ,target.textContent);
+      }if(target.parentElement.className === 'in-progress-tasks'){
+        localStorageObjectForUpdate['in-progress'].splice(indexOfDoubleClicked, 1 ,target.textContent);
+      }if(target.parentElement.className === 'done-tasks'){
+        localStorageObjectForUpdate.done.splice(indexOfDoubleClicked, 1 ,target.textContent);
+      }
+      console.log(localStorageObjectForUpdate);
+      localStorage.setItem('tasks',JSON.stringify(localStorageObjectForUpdate));
+      // end of local storage save
  }
  //
 
