@@ -6,10 +6,8 @@
           })
         );
  }
- 
 
 
-    console.log(JSON.parse(localStorage.tasks).todo);
     let localStorageObjectForUpdate = JSON.parse(localStorage.tasks);
 
 
@@ -47,7 +45,7 @@ let taskSectionsArray = Array.from(document.querySelectorAll('.task-section'));
 let submitButtonArray = Array.from(document.getElementsByClassName('add-task'));
 let searchBar = document.getElementById('search');
 let saveButton = document.getElementById('save-button');
-let loadButton = document.getElementById('load-button');
+let loadButton = document.getElementById('load-btn');
  
  //localstorage loading function
  
@@ -93,12 +91,22 @@ let loadButton = document.getElementById('load-button');
  }else{
     var toDoTasksUl = createElement('ul', children = [], classes = ['to-do-tasks'], attributes = {})
     var inProgressTasksUl = createElement('ul', children = [], classes = ['in-progress-tasks'], attributes = {})
-    var doneTasksUl = createElement('ul', children = [], classes = ['done-tasks'], attributes = {})
-
+    var doneTasksUl = createElement('ul', children = [], classes = ['done-tasks'], attributes = {});
+    
+    console.log('no local storage');
+  
     document.getElementById('to-do-container').appendChild(toDoTasksUl);
     document.getElementById('in-progress-container').appendChild(inProgressTasksUl);
     document.getElementById('done-container').appendChild(doneTasksUl);
 }
+
+
+console.log(toDoTasksUl);
+console.log(inProgressTasksUl);
+console.log(doneTasksUl);
+
+
+
 //load local storage
 
 console.log
@@ -259,13 +267,13 @@ async function saveApi(){
     let doneTaskArray = Array.from(doneTasksUl.children);
 
     todoTasksArray = todoTasksArray.map((task) => {
-        return (task.textContent)
+        return (task.textContent);
     });
     inProgressTaskArray = inProgressTaskArray.map((task) => {
-        return (task.textContent)
+        return (task.textContent);
     });
     doneTaskArray = doneTaskArray.map((task) => {
-        return (task.textContent)
+        return (task.textContent);
     });
 
 
@@ -275,36 +283,64 @@ async function saveApi(){
         headers :{
             Accept: "application/json", "Content-Type": "application/json",
         },
-        body: JSON.stringify({'tasks':{'todo':[...todoTasksArray.reverse()], 'in-progress': [...inProgressTaskArray.reverse()], 'done' : [...doneTaskArray.reverse()]} 
+        body: JSON.stringify({'tasks':{'todo':[...todoTasksArray], 'in-progress': [...inProgressTaskArray], 'done' : [...doneTaskArray]}
         }) 
   })
 }
+// load API function
 
 async function loadApi(){
    await fetch('https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15').then(response => response.json())
    .then(data => {
-    toDoTasksUlAPI = data.tasks.todo[0];
-    inProgressTasksUlAPI = data.tasks['in-progress'][0];
-    doneTasksUlAPI = data.tasks.done[0];
+    todoTasksArrayAPI = Array.from(data.tasks.todo);
+    inProgressTaskArrayAPI = Array.from(data.tasks['in-progress']);
+    doneTaskArrayAPI= Array.from(data.tasks.done);
     //
-    let toDoSection = document.getElementById('to-do-container');
+    let toDoContainer = document.getElementById('to-do-container');
     let inProgressContainer = document.getElementById('in-progress-container');
-    let donContainer = document.getElementById('done-container');
+    let doneContainer = document.getElementById('done-container');
     //
-    toDoSection.innerHTML = toDoTasksUlAPI;
-    inProgressContainer.innerHTML = inProgressTasksUlAPI;
-    donContainer.innerHTML = doneTasksUlAPI;
 
-    toDoTasksUl = toDoSection.firstChild;
-    inProgressTasksUl = inProgressContainer.firstChild;
-    doneTasksUl = donContainer.firstChild;
+    console.log(toDoTasksUl);
+    console.log(inProgressTasksUl);
+    console.log(doneTasksUl);
+    /*
+    if(!toDoTasksUl && !inProgressTasksUl && !doneTasksUl){
+        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+       var toDoTasksUl = createElement('ul', children = [], classes = ['to-do-tasks'], attributes = {});
+       var inProgressTasksUl = createElement('ul', children = [], classes = ['in-progress-tasks'], attributes = {});
+        var doneTasksUl = createElement('ul', children = [], classes = ['done-tasks'], attributes = {});
 
-    localStorageSave();
+        toDoContainer.appendChild(toDoTasksUl)
+        inProgressContainer.appendChild(inProgressTasksUl); 
+        doneContainer.appendChild(doneTasksUl);
+     };
+    */
 
-    for(let li of Array.from(document.querySelectorAll('.task'))){
-        li.addEventListener('dragstart', dragItem);
-        li.addEventListener('dragend', endDrag);
-      };
+    toDoTasksUl.innerHTML = '';
+    inProgressTasksUl.innerHTML = '';
+    doneTasksUl.innerHTML = '';
+
+            for(let task of todoTasksArrayAPI){
+            let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+            newTask.addEventListener('dragstart', dragItem);
+            newTask.addEventListener('dragend', endDrag);
+            toDoContainer.firstChild.appendChild(newTask);
+            }
+            for(let task of inProgressTaskArrayAPI){
+            let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+            newTask.addEventListener('dragstart', dragItem);
+            newTask.addEventListener('dragend', endDrag);
+            inProgressContainer.firstChild.appendChild(newTask);
+            }
+            for(let task of doneTaskArrayAPI){
+            let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+            newTask.addEventListener('dragstart', dragItem);
+            newTask.addEventListener('dragend', endDrag);
+            doneContainer.firstChild.appendChild(newTask);
+            }
+            localStorageSave();
+            
    });
 }
 
