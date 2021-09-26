@@ -43,10 +43,9 @@ function localStorageSave(){
     });
 
 
-    localStorageObjectForUpdate.todo = todoTasksArray //.reverse();
-    localStorageObjectForUpdate['in-progress'] = inProgressTaskArray //.reverse();
-    localStorageObjectForUpdate.done = doneTaskArray //.reverse();
-    console.log(localStorageObjectForUpdate);
+    localStorageObjectForUpdate.todo = todoTasksArray 
+    localStorageObjectForUpdate['in-progress'] = inProgressTaskArray 
+    localStorageObjectForUpdate.done = doneTaskArray 
     localStorage.setItem('tasks',JSON.stringify(localStorageObjectForUpdate));
 }
 
