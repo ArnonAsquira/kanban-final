@@ -622,8 +622,8 @@ async function loadApi() {
         headers: {
           'Content-Type': 'application/json',
         },
-    body: JSON.stringify({ tasks })
-    //body: JSON.stringify({'tasks':{'todo':[], 'in-progress': [], 'done' : []}}),
+    //body: JSON.stringify({ tasks })
+    body: JSON.stringify({'tasks':{'todo':[], 'in-progress': [], 'done' : []}}),
       })
       if (!response.ok) {
         alert(response.status)
