@@ -69,6 +69,9 @@ let searchBar = document.getElementById('search');
 let saveButton = document.getElementById('save-btn');
 let loadButton = document.getElementById('load-btn');
 let apiButtons = document.getElementsByClassName('api-buttons')[0];
+let toDoContainer = document.querySelector('#to-do-container');
+let inProgressContainer = document.getElementById('in-progress-container');
+let doneContainer = document.getElementById('done-container');
 
  
  //localstorage loading function
@@ -76,9 +79,6 @@ let apiButtons = document.getElementsByClassName('api-buttons')[0];
 
 
     if(localStorageObjectForUpdate.todo.length > 0 || localStorageObjectForUpdate['in-progress'].length > 0 || localStorageObjectForUpdate.done.length > 0){
-        let toDoContainer = document.querySelector('#to-do-container');
-        let inProgressContainer = document.getElementById('in-progress-container');
-        let doneContainer = document.getElementById('done-container');
 
         var toDoTasksUl = createElement('ul', children = [], classes = ['to-do-tasks'], attributes = {});
         var inProgressTasksUl = createElement('ul', children = [], classes = ['in-progress-tasks'], attributes = {});
@@ -591,24 +591,49 @@ async function loadApi() {
         throw 'error';
       }
       const data = await response.json()
-      if (localStorage.tasks === data.tasks){
-        apiButtons.lastElementChild.classList.remove('loader');
-        return apiButtons.lastElementChild.classList.remove('loader');
-      } else{
-            console.log(data.tasks);
-            console.log(typeof(data.tasks));
-            console.log(JSON.stringify(data.tasks));
-            const newString = String.raw(JSON.stringify(data.tasks))// stringifies without \\
-            localStorage.setItem('tasks', newString);
-            apiButtons.lastElementChild.classList.remove('loader');  
-      }
-      apiButtons.lastElementChild.classList.remove('loader');
-      location.reload()
-   // } catch (e) {
-   //   console.log(e)
-   // }
+      if(localStorage.tasks == JSON.stringify(data.tasks)){
+        for(let section of taskSectionsArray){
+            section.lastElementChild.innerHTML = '';
+        }
+        localStorageLoad();
+      }else{
+                if(typeof(data.tasks) === 'string'){
+                    todoTasksArrayAPI = Array.from(JSON.parse(data.tasks).todo);
+                    inProgressTaskArrayAPI = Array.from(JSON.parse(data.tasks)['in-progress']);
+                    doneTaskArrayAPI= Array.from(JSON.parse(data.tasks).done);
+                }else{
+                    todoTasksArrayAPI = Array.from(data.tasks.todo);
+                    inProgressTaskArrayAPI = Array.from(data.tasks['in-progress']);
+                    doneTaskArrayAPI= Array.from(data.tasks.done);
+                }     
+            toDoTasksUl.innerHTML = '';
+            inProgressTasksUl.innerHTML = '';
+            doneTasksUl.innerHTML = '';
+
+                    for(let task of todoTasksArrayAPI){
+                    let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+                    newTask.addEventListener('dragstart', dragItem);
+                    newTask.addEventListener('dragend', endDrag);
+                    toDoContainer.firstChild.appendChild(newTask);
+                    }
+                    for(let task of inProgressTaskArrayAPI){
+                    let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+                    newTask.addEventListener('dragstart', dragItem);
+                    newTask.addEventListener('dragend', endDrag);
+                    inProgressContainer.firstChild.appendChild(newTask);
+                    }
+                    for(let task of doneTaskArrayAPI){
+                    let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+                    newTask.addEventListener('dragstart', dragItem);
+                    newTask.addEventListener('dragend', endDrag);
+                    doneContainer.firstChild.appendChild(newTask);
+                    }
+                    localStorageSave();
+                }
+    
     apiButtons.lastElementChild.classList.remove('loader');
   }
+
 
  // saveApi
  async function saveApi() {
@@ -622,7 +647,7 @@ async function loadApi() {
         headers: {
           'Content-Type': 'application/json',
         },
-    body: JSON.stringify({ tasks })
+    body: JSON.stringify({'tasks':{'todo':[...localStorageObjectForUpdate.todo], 'in-progress': [...localStorageObjectForUpdate['in-progress']], 'done' : [...localStorageObjectForUpdate.done]}})
     //body: JSON.stringify({'tasks':{'todo':[], 'in-progress': [], 'done' : []}}),
       })
       if (!response.ok) {
