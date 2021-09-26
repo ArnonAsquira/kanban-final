@@ -422,25 +422,19 @@ async function loadApi() {
             toDoTasksUl.innerHTML = '';
             inProgressTasksUl.innerHTML = '';
             doneTasksUl.innerHTML = '';
+                  
 
-                    for(let task of todoTasksArrayAPI){
+            function pushTasks(ulAPI, container){
+                for(let task of ulAPI){
                     let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
                     newTask.addEventListener('dragstart', dragItem);
                     newTask.addEventListener('dragend', endDrag);
-                    toDoContainer.firstChild.appendChild(newTask);
-                    }
-                    for(let task of inProgressTaskArrayAPI){
-                    let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-                    newTask.addEventListener('dragstart', dragItem);
-                    newTask.addEventListener('dragend', endDrag);
-                    inProgressContainer.firstChild.appendChild(newTask);
-                    }
-                    for(let task of doneTaskArrayAPI){
-                    let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-                    newTask.addEventListener('dragstart', dragItem);
-                    newTask.addEventListener('dragend', endDrag);
-                    doneContainer.firstChild.appendChild(newTask);
-                    }
+                    container.firstChild.appendChild(newTask);
+            }
+        }
+            pushTasks(todoTasksArrayAPI, toDoContainer);
+            pushTasks(inProgressTaskArrayAPI, inProgressContainer);
+            pushTasks(doneTaskArrayAPI, doneContainer);
                     localStorageSave();
                 }
     
