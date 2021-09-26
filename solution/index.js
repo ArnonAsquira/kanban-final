@@ -18,6 +18,15 @@ async () => {
         })
 }
 
+//create loader
+function createLoader(){
+   let loader = createElement('div', children = [], classes = ['loader'], attributes = {});
+    document.body.appendChild(loader);
+}
+function removeLoader(){
+    let loader = document.querySelector('.loader');
+    loader.remove();
+}
 
 
 
@@ -281,10 +290,11 @@ searchBar.addEventListener('keyup', searchTask);
 //API functions
 console.log(localStorage.tasks);
 async function saveApi(){
-    console.log('save button');
+    apiButtons.lastElementChild.classList.add('loader');
      let { tasks } = localStorage;
      console.log(tasks);
-    apiButtons.lastElementChild.classList.add('loader');
+
+    removeLoader();
 
         fetch('https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15',{
         method: 'PUT',
@@ -360,6 +370,7 @@ async function loadApi(){
     }
     apiButtons.lastElementChild.classList.remove('loader');
  return response.json()}).then(data => {
+    saveApi();
      console.log(data.tasks);
      if(responseNoGood === 1){
          return;
