@@ -9,9 +9,6 @@
 
  //localStorage.clear(); // clears the local storage
 
-
-
-
     console.log(localStorage.tasks);
   // initilizes the local storgae object for updates
     if(typeof(localStorage.tasks) === 'string'){
@@ -63,8 +60,6 @@ let doneContainer = document.getElementById('done-container');
 
  
  //localstorage loading function
-
-
 
     if(localStorageObjectForUpdate.todo.length > 0 || localStorageObjectForUpdate['in-progress'].length > 0 || localStorageObjectForUpdate.done.length > 0){
 
