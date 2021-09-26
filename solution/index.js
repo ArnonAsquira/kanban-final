@@ -81,27 +81,17 @@ let doneContainer = document.getElementById('done-container');
     
         console.log(toDoContainer);
 
-    for(let task of JSON.parse(localStorage.tasks).todo){
-        console.log(toDoContainer);
-        let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-        newTask.addEventListener('dragstart', dragItem);
-        newTask.addEventListener('dragend', endDrag);
-        toDoContainer.firstChild.appendChild(newTask);
-    }
-    for(let task of JSON.parse(localStorage.tasks)['in-progress']){
-        console.log(task + 'inprogress task');
-        let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-        newTask.addEventListener('dragstart', dragItem);
-        newTask.addEventListener('dragend', endDrag);
-        inProgressContainer.firstChild.appendChild(newTask);
-    }
-    for(let task of JSON.parse(localStorage.tasks).done){
-        console.log(task + 'done task');
-        let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-        newTask.addEventListener('dragstart', dragItem);
-        newTask.addEventListener('dragend', endDrag);
-        doneContainer.firstChild.appendChild(newTask);
-    }
+        function loadUl(ul,container){
+            for(let task of JSON.parse(localStorage.tasks)[ul]){
+                let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+                newTask.addEventListener('dragstart', dragItem);
+                newTask.addEventListener('dragend', endDrag);
+                container.firstChild.appendChild(newTask);
+            }
+        }
+     loadUl('todo', toDoContainer);
+     loadUl('in-progress', inProgressContainer);
+     loadUl('done', doneContainer);
 
     }else{
         var toDoTasksUl = createElement('ul', children = [], classes = ['to-do-tasks'], attributes = {})
@@ -341,35 +331,24 @@ function localStorageLoad(){
         var inProgressTasksUl = createElement('ul', children = [], classes = ['in-progress-tasks'], attributes = {});
         var doneTasksUl = createElement('ul', children = [], classes = ['done-tasks'], attributes = {});
 
-        console.log(toDoTasksUl);
+     
 
         toDoContainer.appendChild(toDoTasksUl)
         inProgressContainer.appendChild(inProgressTasksUl); 
         doneContainer.appendChild(doneTasksUl);
     
-        console.log(toDoContainer);
+        function loadUl(ul,container){
+            for(let task of JSON.parse(localStorage.tasks)[ul]){
+                let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
+                newTask.addEventListener('dragstart', dragItem);
+                newTask.addEventListener('dragend', endDrag);
+                container.firstChild.appendChild(newTask);
+            }
+        }
 
-    for(let task of JSON.parse(localStorage.tasks).todo){
-        console.log(toDoContainer);
-        let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-        newTask.addEventListener('dragstart', dragItem);
-        newTask.addEventListener('dragend', endDrag);
-        toDoContainer.firstChild.appendChild(newTask);
-    }
-    for(let task of JSON.parse(localStorage.tasks)['in-progress']){
-        console.log(task + 'inprogress task');
-        let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-        newTask.addEventListener('dragstart', dragItem);
-        newTask.addEventListener('dragend', endDrag);
-        inProgressContainer.firstChild.appendChild(newTask);
-    }
-    for(let task of JSON.parse(localStorage.tasks).done){
-        console.log(task + 'done task');
-        let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-        newTask.addEventListener('dragstart', dragItem);
-        newTask.addEventListener('dragend', endDrag);
-        doneContainer.firstChild.appendChild(newTask);
-    }
+        loadUl('todo', toDoContainer);
+        loadUl('in-progress', inProgressContainer);
+        loadUl('done', doneContainer);
 
     }else{
         var toDoTasksUl = createElement('ul', children = [], classes = ['to-do-tasks'], attributes = {})
