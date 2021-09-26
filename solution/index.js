@@ -7,16 +7,9 @@
         );
  }
 
-async () => {
-    fetch('https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15',{
-        method: 'POST',
-        headers :{
-            Accept: "application/json", "Content-Type": "application/json",
-        },
-        body: JSON.stringify({tasks: 'tasks'})
-        //body: JSON.stringify({'tasks':{'todo':[], 'in-progress': [], 'done' : []}})
-        })
-}
+ //localStorage.clear();
+
+
 
 //create loader
 function createLoader(){
@@ -30,8 +23,13 @@ function removeLoader(){
 
 
 
-
-    let localStorageObjectForUpdate = JSON.parse(localStorage.tasks);
+    console.log(localStorage.tasks);
+  
+    if(typeof(localStorage.tasks) === 'string'){
+        var localStorageObjectForUpdate = JSON.parse(localStorage.tasks);
+    }else{   
+        var localStorageObjectForUpdate = localStorage.tasks;
+    }
 
 
 document.body.addEventListener('mouseover' ,addHoverReplace);
@@ -288,6 +286,7 @@ searchBar.addEventListener('keyup', searchTask);
 
 
 //API functions
+/*
 console.log(localStorage.tasks);
 async function saveApi(){
     apiButtons.lastElementChild.classList.add('loader');
@@ -346,13 +345,17 @@ async function saveApi(){
       //apiButtons.lastElementChild.classList.remove('loader');
   })
   */
+ /*
 }
+*/
+
 
 
 // load API function
+/*
 var responseNoGood = 0;
-async function loadApi(){
-    /*
+async function load123Api(){
+    
     for(let section of taskSectionsArray){
         console.log(section.lastElementChild.firstElementChild);
         if(section.lastElementChild.firstElementChild == null){
@@ -360,7 +363,9 @@ async function loadApi(){
         }else{
             section.lastElementChild.firstElementChild.innerHTML = '';
         }
-     };*/
+     };
+
+     
      apiButtons.lastElementChild.classList.add('loader');
 
  fetch('https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15').then(response => {
@@ -403,24 +408,9 @@ async function loadApi(){
                 let inProgressContainer = document.getElementById('in-progress-container');
                 let doneContainer = document.getElementById('done-container');
                 //
-            /*
-                console.log(toDoTasksUl);
-                console.log(inProgressTasksUl);
-                console.log(doneTasksUl);
-                */
-                /*
-                if(!toDoTasksUl && !inProgressTasksUl && !doneTasksUl){
-                    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
-                var toDoTasksUl = createElement('ul', children = [], classes = ['to-do-tasks'], attributes = {});
-                var inProgressTasksUl = createElement('ul', children = [], classes = ['in-progress-tasks'], attributes = {});
-                    var doneTasksUl = createElement('ul', children = [], classes = ['done-tasks'], attributes = {});
 
-                    toDoContainer.appendChild(toDoTasksUl)
-                    inProgressContainer.appendChild(inProgressTasksUl); 
-                    doneContainer.appendChild(doneTasksUl);
-                };
-                */
-                
+     
+               
                 toDoTasksUl.innerHTML = '';
                 inProgressTasksUl.innerHTML = '';
                 doneTasksUl.innerHTML = '';
@@ -448,7 +438,7 @@ async function loadApi(){
         }
    });
 }
-
+*/
 saveButton.addEventListener('click', saveApi);
 loadButton.addEventListener('click', loadApi);
 //
@@ -561,3 +551,86 @@ function localStorageLoad(){
     console.log('local storageLoad');
 }
 
+
+
+//Api functions
+
+async function loadApi() {
+    console.log(localStorage.tasks);
+  
+    for(let section of taskSectionsArray){
+        console.log(section.lastElementChild.firstElementChild);
+        if(section.lastElementChild.firstElementChild == null){
+            section.lastElementChild.innerHTML = '';
+        }else{
+            section.lastElementChild.firstElementChild.innerHTML = '';
+        }
+     };
+     localStorage.setItem('tasks', JSON.stringify({
+        "todo": [],
+        "in-progress": [],
+        "done": []
+          }))
+
+  
+  
+    //try {
+      apiButtons.lastElementChild.classList.add('loader');
+      const url = 'https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15'
+      const response = await fetch(url, {
+        method: 'Get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+      // handle errors:
+       apiButtons.lastElementChild.classList.remove('loader');
+      if (!response.ok) {
+        alert(response.status)
+        throw 'error';
+      }
+      const data = await response.json()
+      if (localStorage.tasks === data.tasks){
+        apiButtons.lastElementChild.classList.remove('loader');
+        return apiButtons.lastElementChild.classList.remove('loader');
+      } else{
+            console.log(data.tasks);
+            console.log(typeof(data.tasks));
+            console.log(JSON.stringify(data.tasks));
+            const newString = String.raw(JSON.stringify(data.tasks))// stringifies without \\
+            localStorage.setItem('tasks', newString);
+            apiButtons.lastElementChild.classList.remove('loader');  
+      }
+      apiButtons.lastElementChild.classList.remove('loader');
+      location.reload()
+   // } catch (e) {
+   //   console.log(e)
+   // }
+    apiButtons.lastElementChild.classList.remove('loader');
+  }
+
+ // saveApi
+ async function saveApi() {
+    try {
+      const { tasks } = localStorage
+      console.log(tasks)
+      apiButtons.lastElementChild.classList.add('loader');
+      const url = 'https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15'
+      const response = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+    body: JSON.stringify({ tasks })
+    //body: JSON.stringify({'tasks':{'todo':[], 'in-progress': [], 'done' : []}}),
+      })
+      if (!response.ok) {
+        alert(response.status)
+        apiButtons.lastElementChild.classList.remove('loader');
+      }
+      apiButtons.lastElementChild.classList.remove('loader');
+    } catch (e) {
+      console.log(e)
+    }
+  }
