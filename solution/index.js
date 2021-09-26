@@ -362,23 +362,7 @@ function localStorageLoad(){
 
 //Api functions
 
-async function loadApi() {
-    console.log(localStorage.tasks);
-  
-    for(let section of taskSectionsArray){
-        console.log(section.lastElementChild.firstElementChild);
-        if(section.lastElementChild.firstElementChild == null){
-            section.lastElementChild.innerHTML = '';
-        }else{
-            section.lastElementChild.firstElementChild.innerHTML = '';
-        }
-     };
-     localStorage.setItem('tasks', JSON.stringify({
-        "todo": [],
-        "in-progress": [],
-        "done": []
-          }))
-
+async function loadApi(){
   
   
     //try {
