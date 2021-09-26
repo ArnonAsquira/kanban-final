@@ -7,24 +7,13 @@
         );
  }
 
- //localStorage.clear();
+ //localStorage.clear(); // clears the local storage
 
-
-
-//create loader
-function createLoader(){
-   let loader = createElement('div', children = [], classes = ['loader'], attributes = {});
-    document.body.appendChild(loader);
-}
-function removeLoader(){
-    let loader = document.querySelector('.loader');
-    loader.remove();
-}
 
 
 
     console.log(localStorage.tasks);
-  
+  // initilizes the local storgae object for updates
     if(typeof(localStorage.tasks) === 'string'){
         var localStorageObjectForUpdate = JSON.parse(localStorage.tasks);
     }else{   
@@ -283,162 +272,7 @@ searchBar.addEventListener('blur', () => {
 searchBar.addEventListener('keyup', searchTask);
 
 
-
-
-//API functions
-/*
-console.log(localStorage.tasks);
-async function saveApi(){
-    apiButtons.lastElementChild.classList.add('loader');
-     let { tasks } = localStorage;
-     console.log(tasks);
-
-    removeLoader();
-
-        fetch('https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15',{
-        method: 'PUT',
-        headers :{
-            Accept: "application/json", "Content-Type": "application/json",
-        },
-        body: JSON.stringify({tasks: JSON.parse(tasks) })
-        //body: JSON.stringify({'tasks':{'todo':[], 'in-progress': [], 'done' : []}})
-        }).then(apiButtons.lastElementChild.classList.remove('loader'));
-        console.log(localStorage.tasks);
-
-        console.log('save button 12345');
-
-  /*
-    let todoTasksArray = Array.from(toDoTasksUl.children);
-    let inProgressTaskArray = Array.from(inProgressTasksUl.children);
-    let doneTaskArray = Array.from(doneTasksUl.children);
-
-    todoTasksArray = todoTasksArray.map((task) => {
-        return (task.textContent);
-    });
-    inProgressTaskArray = inProgressTaskArray.map((task) => {
-        return (task.textContent);
-    });
-    doneTaskArray = doneTaskArray.map((task) => {
-        return (task.textContent);
-    });
-
-    
-
-    apiButtons.lastElementChild.classList.add('loader');
-    apiButtons.lastElementChild.classList.remove('loader');
-
-    console.log('save button');
-      fetch('https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15',{
-        method: 'PUT',
-        headers :{
-            Accept: "application/json", "Content-Type": "application/json",
-        },
-        body: JSON.stringify({'tasks':{'todo':[...todoTasksArray], 'in-progress': [...inProgressTaskArray], 'done' : [...doneTaskArray]}
-        //body: JSON.stringify({'tasks':{'todo':[], 'in-progress': [], 'done' : []}
-        })
-  })
-  /*. then(response => {
-      if(response.status > 400){
-         alert('im a teapot');
-        // apiButtons.lastElementChild.classList.remove('loader');
-      }
-      //apiButtons.lastElementChild.classList.remove('loader');
-  })
-  */
- /*
-}
-*/
-
-
-
-// load API function
-/*
-var responseNoGood = 0;
-async function load123Api(){
-    
-    for(let section of taskSectionsArray){
-        console.log(section.lastElementChild.firstElementChild);
-        if(section.lastElementChild.firstElementChild == null){
-            section.lastElementChild.innerHTML = '';
-        }else{
-            section.lastElementChild.firstElementChild.innerHTML = '';
-        }
-     };
-
-     
-     apiButtons.lastElementChild.classList.add('loader');
-
- fetch('https://json-bins.herokuapp.com/bin/614adb6c4021ac0e6c080c15').then(response => {
-    if(response.status > 400){
-        alert('im a teapot');
-        apiButtons.lastElementChild.classList.remove('loader');
-    }
-    apiButtons.lastElementChild.classList.remove('loader');
- return response.json()}).then(data => {
-    saveApi();
-     console.log(data.tasks);
-     if(responseNoGood === 1){
-         return;
-     }else{
-
-          if(localStorage.tasks == JSON.stringify(data.tasks)){
-            for(let section of taskSectionsArray){
-                section.lastElementChild.innerHTML = '';
-            }
-            localStorageLoad();
-          }else{
-
-                    
-                    console.log(data);
-                    if(typeof(data.tasks) === 'string'){
-                        todoTasksArrayAPI = Array.from(JSON.parse(data.tasks).todo);
-                        inProgressTaskArrayAPI = Array.from(JSON.parse(data.tasks)['in-progress']);
-                        doneTaskArrayAPI= Array.from(JSON.parse(data.tasks).done);
-                    }else{
-                        todoTasksArrayAPI = Array.from(data.tasks.todo);
-                        inProgressTaskArrayAPI = Array.from(data.tasks['in-progress']);
-                        doneTaskArrayAPI= Array.from(data.tasks.done);
-                    }
-               
-                
-            
-
-                //
-                let toDoContainer = document.getElementById('to-do-container');
-                let inProgressContainer = document.getElementById('in-progress-container');
-                let doneContainer = document.getElementById('done-container');
-                //
-
-     
-               
-                toDoTasksUl.innerHTML = '';
-                inProgressTasksUl.innerHTML = '';
-                doneTasksUl.innerHTML = '';
-
-                        for(let task of todoTasksArrayAPI){
-                        let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-                        newTask.addEventListener('dragstart', dragItem);
-                        newTask.addEventListener('dragend', endDrag);
-                        toDoContainer.firstChild.appendChild(newTask);
-                        }
-                        for(let task of inProgressTaskArrayAPI){
-                        let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-                        newTask.addEventListener('dragstart', dragItem);
-                        newTask.addEventListener('dragend', endDrag);
-                        inProgressContainer.firstChild.appendChild(newTask);
-                        }
-                        for(let task of doneTaskArrayAPI){
-                        let newTask = createElement('li',children = [task], classes = ['task'], attributes = {'draggable': 'true'});
-                        newTask.addEventListener('dragstart', dragItem);
-                        newTask.addEventListener('dragend', endDrag);
-                        doneContainer.firstChild.appendChild(newTask);
-                        }
-                        localStorageSave();
-                    }
-        }
-   });
-}
-*/
+//adding event listeners for API buttons
 saveButton.addEventListener('click', saveApi);
 loadButton.addEventListener('click', loadApi);
 //
