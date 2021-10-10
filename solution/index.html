@@ -9,5 +9,53 @@
     <title>Tasks manager</title>
 </head>
 <body>
+    <h1 id="page-title">Arnon's Kanaban</h1>
+    <div class="search-bar">
+        <input id="search" type="text" name="search">
+        <label class="placeholder-label" id="placeholder-label" for="search">
+            <span class="placeholder">search</span>
+        </label>
+    </div>
+    <div class="api-buttons">
+        <button type="button" id="localStorage-delete" class="delete-button">clear local storage</button>
+        <button type="button" id="save-button" class="api-button">save</button>
+        <button type="button" id="load-button" class="api-button">load</button>
+        <div ></div>
+    </div>
+    <div id='tasks-div' class="main-div">
+
+        <section id="to-do-section" class="task-section">
+            <h2 class="section-title">To Do</h2>
+            <button type="button" class="sort-az">sort AZ</button>
+            <span class="task-enumerator"></span>
+            <input type="text" id="add-to-do-task" placeholder="enter task">
+            <button id="submit-add-to-do" class='add-task'>enter</button>
+            <div id='to-do-container'></div>
+            <!-- <ul class="to-do-tasks"></ul> -->
+        </section>
+        <section id="in-progress-section" class="task-section">
+            <h2 class="section-title">In Progress</h2>
+            <button type="button" class="sort-az">sort AZ</button>
+            <span class="task-enumerator"></span>
+            <input type="text" id="add-in-progress-task" placeholder="enter task">
+            <button id="submit-add-in-progress" class='add-task'>enter</button>
+            <div id="in-progress-container"></div>
+           <!--  <ul class="in-progress-tasks"></ul> -->
+        </section>
+        <section id="done-section" class="task-section">
+            <h2 class="section-title">Done</h2>
+            <button type="button" class="sort-az">sort AZ</button>
+            <span class="task-enumerator"></span>
+            <input type="text" id="add-done-task" placeholder="enter task">
+            <button id="submit-add-done" class='add-task'>enter</button>
+            <div id="done-container"></div>
+          <!--   <ul class="done-tasks"></ul> -->
+        </section>
+      
+            
+    </div>
+    <button type="button" id="new-theme-btn" class="them-button-style">change theme</button>
+    <button type="button" id="show-recycle">show recycling bin</button>
+    <section class='recycle-bin' hidden='true'></section>
 </body>
 </html>

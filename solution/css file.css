@@ -1,0 +1,70 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    background-color: darkgrey;
+    font-family: 'Trebuchet MS';
+}
+h1{
+    color: red;
+}
+#game{
+  width: 500px;
+  height: 220px;
+  border: 1px solid black;
+}
+button{
+    width: 200px;
+    height: 50px;
+    border-radius: 8%;
+    background-color: red;
+    color: darkslategray;
+    font-size: 20px;
+}
+#opening-scene, #closing-scene{
+    position: relative;
+    top: 50px;
+    left: 45% ;
+}
+#charecter{
+  /* width: 20px;
+    height: 50px; */
+    background-color: red;
+    position: relative;
+    top: 150px;
+}
+.animate{
+    animation: jump 500ms;
+}
+@keyframes jump{
+    0%{top: 150px;}
+    30%{top: 100px;}
+    70%{top: 100px;}
+    100%{top: 150px;}
+}
+#block{
+    width: 20px;
+    height: 20px;
+    background-color: blue;
+    position: relative;
+    top: 130px;
+    left: 480px;
+    animation: block 1500ms linear infinite;
+}
+
+#upper-block{
+    width: 20px;
+    height: 20px;
+    background-color: aqua;
+    position: relative;
+    top: 50px;
+    left: 480px;
+    transition: all 500ms;
+}
+
+@keyframes block{
+    0%{left: 480px;}
+    100%{left: -40px;}
+}
+
